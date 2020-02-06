@@ -1,4 +1,6 @@
 package com.epam.brest;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class Main
 {
@@ -10,16 +12,13 @@ public class Main
         int i = 0;
 
         do {
+
             if(i == 0) {
                 System.out.println("Please, enter distance or Q for exit");
-            } else if ( i == 1) {
-                System.out.println("Please, enter price per km or Q for exit");
-            } else if (i == 2) {
-                System.out.println("Please, enter weight or Q for exit");
             } else {
-                System.out.println("Please, price per or Q for exit");
-            }
+                System.out.println("Please, enter weight or Q for exit");
 
+            }
 
             inputValue = scanner.next();
             if (!isExitValue(inputValue)){
@@ -28,14 +27,17 @@ public class Main
                     i++;
                 }
             }
-            if (i == 4) {
-                double calcResult = enteredValues[0]*enteredValues[1]+enteredValues[2]*enteredValues[3];
+
+            if (i == 2) {
+                double calcResult = enteredValues[0]*getPricePerKm(enteredValues[0])+enteredValues[1]*getPricePerKg(enteredValues[1]);
                 System.out.println("Price $ " + calcResult);
                 i=0;
             }
 
         } while (!isExitValue(inputValue));
         System.out.println("Finish!");
+
+
 }
 
     private static boolean isExitValue (String value){
@@ -54,6 +56,75 @@ public class Main
             checkResult = false;
         }
         return checkResult;
+    }
+
+
+    public static double getPricePerKm(double enterNumOfKm) {
+        double numberOfKm = enterNumOfKm;
+        double pricePerKm = 0;
+        File priceFile = new File("pricePerKm.txt");
+        double[] arrayWithIntNumber = new double[2];
+
+        try {
+            Scanner scanner = new Scanner(priceFile);
+            boolean flag = true;
+            int counter;
+            while (scanner.hasNextLine() && flag) {
+                String lineWithKeyAndNumberOfKm = scanner.nextLine();
+                String[] arrayWithStringNumber = lineWithKeyAndNumberOfKm.split(" ");
+                counter = 0;
+                for (String number: arrayWithStringNumber){
+                    arrayWithIntNumber[counter++] = Integer.parseInt(number);
+                }
+
+                if (numberOfKm >= arrayWithIntNumber[0]){
+                    pricePerKm = arrayWithIntNumber[1];
+                    flag = false;
+                }
+
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException var14) {
+            System.out.println("An error occurred.");
+            var14.printStackTrace();
+        }
+
+        return pricePerKm;
+    }
+
+    public static double getPricePerKg(double enterNumOfKg) {
+        double numberOfKm = enterNumOfKg;
+        double pricePerKg = 0;
+        File priceFile = new File("pricePerKg.txt");
+        double[] arrayWithIntNumber = new double[2];
+
+        try {
+            Scanner scanner = new Scanner(priceFile);
+            boolean flag = true;
+            int counter;
+            while (scanner.hasNextLine() && flag) {
+                String lineWithKeyAndNumberOfKm = scanner.nextLine();
+                String[] arrayWithStringNumber = lineWithKeyAndNumberOfKm.split(" ");
+                counter = 0;
+                for (String number: arrayWithStringNumber){
+                    arrayWithIntNumber[counter++] = Integer.parseInt(number);
+                }
+
+                if (numberOfKm >= arrayWithIntNumber[0]){
+                    pricePerKg = arrayWithIntNumber[1];
+                    flag = false;
+                }
+
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException var14) {
+            System.out.println("An error occurred.");
+            var14.printStackTrace();
+        }
+
+        return pricePerKg;
     }
 }
 
