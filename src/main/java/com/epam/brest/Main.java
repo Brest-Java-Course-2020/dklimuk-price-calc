@@ -1,26 +1,29 @@
 package com.epam.brest;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
+
 public class Main
 {
-    public static void main( String[] args ){
+    public static void main( String[] args ) throws IOException {
 
         Double[] enteredValues = new Double[4];
         Scanner scanner = new Scanner(System.in);
         String inputValue;
+        WriteCalculationData writer = new WriteCalculationData();
         int i = 0;
 
         do {
-
             if(i == 0) {
                 System.out.println("Please, enter distance or Q for exit");
             } else {
                 System.out.println("Please, enter weight or Q for exit");
-
             }
 
             inputValue = scanner.next();
+
             if (!isExitValue(inputValue)){
                 if(isCorrectDoubleValue(inputValue)){
                     enteredValues[i] = Double.parseDouble(inputValue);
@@ -32,13 +35,16 @@ public class Main
                 double calcResult = enteredValues[0]*getPricePerKm(enteredValues[0])+enteredValues[1]*getPricePerKg(enteredValues[1]);
                 System.out.println("Price $ " + calcResult);
                 i=0;
+                writer.writeToFile(enteredValues[0], getPricePerKm(enteredValues[0]), enteredValues[1], getPricePerKg(enteredValues[1]), calcResult);
+
             }
 
         } while (!isExitValue(inputValue));
+
         System.out.println("Finish!");
 
 
-}
+    }
 
     private static boolean isExitValue (String value){
 
@@ -126,6 +132,7 @@ public class Main
 
         return pricePerKg;
     }
+
 }
 
 
