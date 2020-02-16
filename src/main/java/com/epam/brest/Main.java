@@ -11,8 +11,8 @@ public class Main
 
         Double[] enteredValues = new Double[4];
         Scanner scanner = new Scanner(System.in);
+        ExitValue exitValueVariable  = new ExitValue();
         String inputValue;
-        WriteCalculationData writer = new WriteCalculationData();
         int i = 0;
 
         do {
@@ -24,114 +24,28 @@ public class Main
 
             inputValue = scanner.next();
 
-            if (!isExitValue(inputValue)){
-                if(isCorrectDoubleValue(inputValue)){
+            if (!exitValueVariable.isExitValue(inputValue)){
+                if(CorrectDoubleValue.isCorrectDoubleValue(inputValue)){
                     enteredValues[i] = Double.parseDouble(inputValue);
                     i++;
                 }
             }
 
             if (i == 2) {
-                double calcResult = enteredValues[0]*getPricePerKm(enteredValues[0])+enteredValues[1]*getPricePerKg(enteredValues[1]);
-                System.out.println("Price $ " + calcResult);
+                Oder oder = new Oder(enteredValues[0], enteredValues[1]);
+                System.out.println(oder.calculation());
+                oder.getInformationAboutOder();
+                oder.writeToFile();
                 i=0;
-                writer.writeToFile(enteredValues[0], getPricePerKm(enteredValues[0]), enteredValues[1], getPricePerKg(enteredValues[1]), calcResult);
-
             }
 
-        } while (!isExitValue(inputValue));
+        } while (!exitValueVariable.isExitValue(inputValue));
 
         System.out.println("Finish!");
 
 
     }
 
-    private static boolean isExitValue (String value){
-
-        return (value.equalsIgnoreCase("Q"));
-    }
-
-    private static boolean isCorrectDoubleValue (String value)
-    {
-        boolean checkResult;
-        try{
-            double enteredDoubleValue = Double.parseDouble(value);
-            checkResult = enteredDoubleValue >= 0;
-
-        } catch (NumberFormatException ex) {
-            checkResult = false;
-        }
-        return checkResult;
-    }
-
-
-    public static double getPricePerKm(double enterNumOfKm) {
-        double numberOfKm = enterNumOfKm;
-        double pricePerKm = 0;
-        File priceFile = new File("pricePerKm.txt");
-        double[] arrayWithIntNumber = new double[2];
-
-        try {
-            Scanner scanner = new Scanner(priceFile);
-            boolean flag = true;
-            int counter;
-            while (scanner.hasNextLine() && flag) {
-                String lineWithKeyAndNumberOfKm = scanner.nextLine();
-                String[] arrayWithStringNumber = lineWithKeyAndNumberOfKm.split(" ");
-                counter = 0;
-                for (String number: arrayWithStringNumber){
-                    arrayWithIntNumber[counter++] = Integer.parseInt(number);
-                }
-
-                if (numberOfKm >= arrayWithIntNumber[0]){
-                    pricePerKm = arrayWithIntNumber[1];
-                    flag = false;
-                }
-
-            }
-
-            scanner.close();
-        } catch (FileNotFoundException var14) {
-            System.out.println("An error occurred.");
-            var14.printStackTrace();
-        }
-
-        return pricePerKm;
-    }
-
-    public static double getPricePerKg(double enterNumOfKg) {
-        double numberOfKm = enterNumOfKg;
-        double pricePerKg = 0;
-        File priceFile = new File("pricePerKg.txt");
-        double[] arrayWithIntNumber = new double[2];
-
-        try {
-            Scanner scanner = new Scanner(priceFile);
-            boolean flag = true;
-            int counter;
-            while (scanner.hasNextLine() && flag) {
-                String lineWithKeyAndNumberOfKm = scanner.nextLine();
-                String[] arrayWithStringNumber = lineWithKeyAndNumberOfKm.split(" ");
-                counter = 0;
-                for (String number: arrayWithStringNumber){
-                    arrayWithIntNumber[counter++] = Integer.parseInt(number);
-                }
-
-                if (numberOfKm >= arrayWithIntNumber[0]){
-                    pricePerKg = arrayWithIntNumber[1];
-                    flag = false;
-                }
-
-            }
-
-            scanner.close();
-        } catch (FileNotFoundException var14) {
-            System.out.println("An error occurred.");
-            var14.printStackTrace();
-        }
-
-        return pricePerKg;
-    }
 
 }
 
